@@ -55,9 +55,9 @@ def make_figure3d(savedir, data):
     plt.clf()
     plt.close()
 
-def make_movie(savedir, fps):
+def make_movie(savedir, filename, fps):
     now = datetime.datetime.now()
-    pathname = savedir + now.strftime('%Y%m%d_%H%M%S') + '.mp4'
+    pathname = savedir + filename + '_' + now.strftime('%Y%m%d_%H%M%S') + '.mp4'
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     outfh = cv2.VideoWriter(pathname, fourcc, fps, (640, 480))
     for photo_name in sorted(glob.glob('./images/*.png')):
@@ -82,5 +82,5 @@ if __name__ == '__main__':
         # make_figure3d(args.savedir, data)
         make_figure2d(args.savedir, data)
 
-    make_movie(args.savedir, args.fps)
+    make_movie(args.savedir, args.filename, args.fps)
     print('done!')
