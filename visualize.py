@@ -5,6 +5,7 @@ import os
 import glob
 import cv2
 from mpl_toolkits.mplot3d import Axes3D
+import datetime
 
 
 def read_csv(filename):
@@ -17,20 +18,38 @@ def delete_images(savedir):
         if os.path.isfile(p):
             os.remove(p)
 
-def make_figure(savedir, data):
+def make_figure2d(savedir, data):
+    index = int(data[0])
+    print('processing', index)
+    pathname = savedir + ('000'+str(index))[-4:] + '.png'
+    
+
+    plt.xlim(-1, 1)
+    plt.ylim(0, 2)
+
+    for i in range(2, len(data), 3):
+        if not pd.isnull(data[i]):
+            plt.scatter(data[i+2], data[i+1])
+
+    plt.savefig(pathname)
+    plt.clf()
+    plt.close()
+
+def make_figure3d(savedir, data):
     index = int(data[0])
     print('processing', index)
     pathname = savedir + ('000'+str(index))[-4:] + '.png'
     
     fig = plt.figure()
     ax = Axes3D(fig)
-    ax.set_xlim(1, 2)
-    ax.set_ylim(1, 2)
-    ax.set_zlim(0, 0.5)
+
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.set_zlim(0, 2)
 
     for i in range(2, len(data), 3):
         if not pd.isnull(data[i]):
-            ax.scatter(data[i], data[i+1], data[i+2])
+            ax.scatter(data[i], data[i+2], data[i+1])
 
     fig.savefig(pathname)
     plt.clf()
@@ -60,8 +79,8 @@ if __name__ == '__main__':
     delete_images(args.savedir)
 
     for index, data in df.iterrows():
-        make_figure(args.savedir, data)
+        # make_figure3d(args.savedir, data)
+        make_figure2d(args.savedir, data)
 
     make_movie(args.savedir, args.fps)
-    delete_images(args.savedir)
     print('done!')
